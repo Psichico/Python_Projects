@@ -22,9 +22,9 @@ def one_point_format(n):
     if sign == 1:
         expont = length - 2 
     new_n  = float(n) / (10**(expont))
-    new_n  = float(new_n)
+    one_point_n  = float(new_n)
 
-    return sign, new_n, expont
+    return sign, one_point_n, expont #type int float int
 
 def bias(true_exponent, op):
     if int(op) == 1:
@@ -34,14 +34,13 @@ def bias(true_exponent, op):
     if int(op) == 3:
         bias_exponent = true_exponent + 1023 #double
     
-    return bias_exponent
+    return bias_exponent #type int
 
 def mantissa(number, op):
     string   = str(number)
     temp     = string.split(".")
     manti_temp = temp[1]
-    #manti_temp = string
-    #manti_temp = bin_n.replace("0b","")#   bin(n).replace("0b","")
+
     if int(op) == 1:
         mantissa =  manti_temp.ljust( 10,str(0))#half
     if int(op) == 2:
@@ -49,33 +48,32 @@ def mantissa(number, op):
     if int(op) == 3:
         mantissa =  manti_temp.ljust( 52,str(0))#double
 
-    return mantissa
+    return mantissa #type string
 
 def right_shift(n, exp_a, exp_b, op):
-
     diff = exp_a - exp_b
     if diff < 0:
         diff = diff * (-1)
-    #shifted = "1" + str(n)
-    r_shifted = (n >> diff)
-    manti_temp = bin(r_shifted)
+    r_shift_int = (n >> diff) #type int
+    
+    manti_temp = bin(r_shift_int) #type string
     manti_temp = manti_temp.replace("0b","")
 
     if int(op) == 1:
-        mantissa =  manti_temp.ljust( 10,str(0))#half
+        mantissa =  manti_temp.rjust( 10,str(0))#half
     if int(op) == 2:
-        mantissa =  manti_temp.ljust( 23,str(0))#single
+        mantissa =  manti_temp.rjust( 23,str(0))#single
     if int(op) == 3:
-        mantissa =  manti_temp.ljust( 52,str(0))#double
+        mantissa =  manti_temp.rjust( 52,str(0))#double
 
-    input = mantissa
-    d = diff
-    Rfirst = input[0 : len(input)-d] 
-    Rsecond = input[len(input)-d : ]
-    res = Rsecond + Rfirst
-    res = res.replace("0b","")
+    #print(mantissa)
+    #temp1 = mantissa[0 : len(mantissa) - diff ] 
+    #temp2 = mantissa[len(mantissa) - diff : ]
+    #r_shift_bin = temp2 + temp1
+    #r_shift_bin = r_shift_bin.replace("0b","")
+    r_shift_bin = mantissa
 
-    return r_shifted, res
+    return r_shift_int, r_shift_bin
 
 def binaryToDecimal(n): 
     num = n; 
@@ -99,9 +97,8 @@ def expand_mantissa(n, op):
     if int(op) == 3:
         mantissa =  manti_temp.ljust( 52,str(0))#double
 
-    return mantissa
+    return mantissa #type string
 
-#sign, number , exponent = one_point_format(-111.0101)
 sign_a, a, exp_a = one_point_format(in_a)
 sign_b, b, exp_b = one_point_format(in_b)
 
@@ -114,27 +111,19 @@ mantissa_b = mantissa(b, op)
 decimal_value_a = binaryToDecimal(int(mantissa_a))
 decimal_value_b = binaryToDecimal(int(mantissa_b))
 
-new_man_a, one = right_shift(decimal_value_a, exp_a, exp_b, op)
-new_man_b, two = right_shift(decimal_value_b, exp_a, exp_b, op)
+r_mantissa_a, r_mantissa_a_bin = right_shift(decimal_value_a, exp_a, exp_b, op)
+r_mantissa_b, r_mantissa_b_bin = right_shift(decimal_value_b, exp_a, exp_b, op)
 
-expanded = expand_mantissa(new_man_a, op)
+expanded_man_a = expand_mantissa(r_mantissa_a, op)
+expanded_man_b = expand_mantissa(r_mantissa_b, op)
 
 print("Bias: " + str(bias_a) + " , " + str(bias_b))
-print(type(bias_a))
-print(type(bias_b))
 print("Mantissa: " + mantissa_a + " , " + mantissa_b)
-print(type(mantissa_a))
-print(type(mantissa_a))
-print("now ",decimal_value_a)
-print("now ",decimal_value_b) 
-print(new_man_a)
-print(new_man_b)
-print("Yo, ",type(bin(new_man_a)))
-print("-------",one)
-print("-------",two)
-print(bin(new_man_a))
-print(bin(new_man_b)) 
-print(expanded)
+print("Decimal Mantissa: " + str(decimal_value_a) + " , " + str(decimal_value_b))
+print("Decimal R_Mantissa: " + str(r_mantissa_a) + " , " + str(r_mantissa_b))
+print("R_Mantissa: " + str(r_mantissa_a_bin) + " , " + str(r_mantissa_b_bin))
+
+
 
 
 
