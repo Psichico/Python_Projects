@@ -18,11 +18,15 @@ def one_point_format(n):
     string = str(n)
     temp   = string.split(".")
     length = len(temp[0])
-    expont = length - 1
-    if sign == 1:
-        expont = length - 2 
-    new_n  = float(n) / (10**(expont))
-    one_point_n  = float(new_n)
+    if length > 1:    
+        expont = length - 1
+        if sign == 1:
+            expont = length - 2 
+        new_n  = float(n) / (10**(expont))
+        one_point_n  = float(new_n)
+    else:
+        one_point_n = float(n)
+        expont      = 0
 
     return sign, one_point_n, expont #type int float int
 
@@ -123,10 +127,68 @@ print("Decimal Mantissa: " + str(decimal_value_a) + " , " + str(decimal_value_b)
 print("Decimal R_Mantissa: " + str(r_mantissa_a) + " , " + str(r_mantissa_b))
 print("R_Mantissa: " + str(r_mantissa_a_bin) + " , " + str(r_mantissa_b_bin))
 
+def two_complement(n,op):
 
+    print('\n')    
+    if int(op) == 1:
+        length = 10
+    if int(op) == 2:
+        length = 23
+    if int(op) == 3:
+        length = 52
+    #string = str('{0:')  + str('b}') #+ str('{}'.format(length))
+    print('number: ',str(n) + str("  Len: ")+ str(len(str(n))))
+    
+    binary = int(str(n))
+    print('int number: ',str(binary) + str("  Len: ")+ str(len(str(binary))))
+    
+    int_ones_complement = ~ binary
+    print('complement: ',str(int_ones_complement) + str("  Len: ")+ str(len(str(int_ones_complement))))
 
+#    twos_b = str('1') + twos_b.replace("-","")
 
+    #str_add_ones        =  str(int_ones_complement).rjust( length,str(1))
+    #str_add_ones        =  str(int(int_ones_complement) + 1)
+    #print('append 1: ',str_add_ones + str("  Len: ")+ str(len(str_add_ones)))
 
+    z = int(int_ones_complement) + 1
+    print('z= ',z)
+    print('l(z)', len(str(z)))
+
+#    int_twos_complement = int(str('-') + str_add_ones.replace("-","")) + 1
+    int_twos_complement = int(int_ones_complement) + 1
+    int_ones_complement = str(int_ones_complement).replace("-","")
+    str_add_ones        =  int_ones_complement.rjust(length,str(1))
+    
+    str_twos_complement = str(str_add_ones) #.zfill(length+1)    
+    print(str(str_twos_complement) + str("  Len: ")+ str(len(str_twos_complement)))
+
+    print('\n')
+
+    return str_twos_complement
+
+# if math.trunc(float(in_a)) < 0:
+#     twos_a = two_complement(r_mantissa_a, op)
+#     twos_a = str('1') + twos_a.replace("-","")
+#     print(twos_a)
+# else:
+#     pass
+# if math.trunc(float(in_b)) < 0:
+#     twos_b = two_complement(r_mantissa_b, op)
+#     twos_b = str('1') + twos_b.replace("-","")
+#     print(twos_b)
+# else:
+#     pass
+print("Mantissa: ",r_mantissa_a_bin)
+print(len(r_mantissa_a_bin))
+x = two_complement(int(mantissa_b), 2)
+print('---------',int(mantissa_b))
+print(int("{b}".format(int(mantissa_b))))
+print("HERE,",x)
+#print(int(r_mantissa_a) + int(r_mantissa_b) )
+#print(x)
+#print(int(x))
+#print(bin(int(x)))
 
 
 
